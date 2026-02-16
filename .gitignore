@@ -1,0 +1,28 @@
+# --- JAVA & COMPILATION ---
+*.class
+bin/
+# Se usi Maven o Gradle in futuro
+target/
+build/
+
+# --- ECLIPSE SPECIFIC ---
+.metadata/
+.settings/
+.project
+.classpath
+# File temporanei di Eclipse
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# --- OS SPECIFIC ---
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# --- IDE & EDITORS ---
+.vscode/
+.idea/
+*.iml
