@@ -1,6 +1,5 @@
 package edu.monmouth.CS205L.queens;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class NQueensSingleSolution {
 
@@ -81,21 +80,6 @@ public class NQueensSingleSolution {
 	        copy[i] = ogBadSquares[i].clone();
 	    }
 	    return copy;
-	}
-	
-	
-	public static int countAvailable(int[][] badSquares) {
-		int counter = constants.START_ITERATION_CYCLE;
-		
-		for (int i = 0; i < badSquares.length; i++) {
-			for(int j = 0; j < badSquares.length; j++) {
-				if (badSquares[i][j] != constants.QUEEN && badSquares[i][j] != constants.BAD_SQUARES) {
-					counter++;
-				}
-			}
-		}
-		
-		return counter;
 	}
 		
 	
@@ -203,14 +187,5 @@ public class NQueensSingleSolution {
 		return (chessBoard[row][col] == constants.QUEEN || chessBoard[row][col] == constants.BAD_SQUARES);
 	}
 	
-	public static int calculateRow(int position, int[][] chessBoard) {
-		int row = (position - 1)/ chessBoard.length;
-		return row;
-	}
-	
-	public static int calculateCol(int position, int[][] chessBoard) {
-		int col = (position - 1)% chessBoard.length;
-		return col;
-	}
 		
 } // class
