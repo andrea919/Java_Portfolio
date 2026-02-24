@@ -1,4 +1,4 @@
-package edu.monmouth.CS205L;
+package edu.monmouth.CS205L.linkedlists;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;

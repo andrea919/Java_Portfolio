@@ -1,4 +1,4 @@
-package edu.monmouth.CS205L;
+package edu.monmouth.CS205L.general;
 
 import java.util.Arrays;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package edu.monmouth.CS205L;
+package edu.monmouth.CS205L.linkedlists;
 
 public class NodeDouble {
 	String data;
