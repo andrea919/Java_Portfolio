@@ -1,7 +1,6 @@
 # --- JAVA & COMPILATION ---
 *.class
 bin/
-# Se usi Maven o Gradle in futuro
 target/
 build/
 
@@ -10,7 +9,7 @@ build/
 .settings/
 .project
 .classpath
-# File temporanei di Eclipse
+
 *.tmp
 *.bak
 *.swp
