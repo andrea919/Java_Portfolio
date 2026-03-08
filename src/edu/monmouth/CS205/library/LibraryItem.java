@@ -4,5 +4,5 @@ public interface LibraryItem {
 	abstract public String getTitle();
 	abstract public boolean isAvailable();
 	abstract public void borrowItem();
-	public void returnIitem();
+	abstract public void returnIitem();
 }
