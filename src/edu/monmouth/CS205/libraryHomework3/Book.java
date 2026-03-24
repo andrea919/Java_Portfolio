@@ -33,7 +33,7 @@ public class Book implements LibraryItem {
 	}
 
 	@Override
-	public void returnIitem() {
+	public void returnItem() {
 		if(getStatus().equals(StatusType.ONSHELF)){
 			System.out.println("Book already on shelf.");
 			return;
