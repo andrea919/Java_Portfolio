@@ -1,4 +1,4 @@
-package edu.monmouth.CS205.library;
+package edu.monmouth.CS205.libraryHomework3;
 
 public class Book implements LibraryItem {
 	private String title;
@@ -6,7 +6,7 @@ public class Book implements LibraryItem {
 	private int pages;
 	private StatusType status;
 	
-	public Book(String author, String title, int pages, StatusType status) throws BookException {
+	public Book(String author, String title, int pages, StatusType status ) throws BookException {
 		setAuthor(author);
 		setTitle(title);
 		setPages(pages);
@@ -34,7 +34,7 @@ public class Book implements LibraryItem {
 
 	@Override
 	public void returnIitem() {
-		if(!(getStatus().equals(StatusType.ONSHELF))){
+		if(getStatus().equals(StatusType.ONSHELF)){
 			System.out.println("Book already on shelf.");
 			return;
 		}
@@ -46,7 +46,7 @@ public class Book implements LibraryItem {
 	}
 
 	public void setAuthor(String author) throws BookException {
-		if(author == null || author.length() < BookConstants.MINAUTHORLENGTH) {
+		if(author == null || author.length() < LibraryItemConstants.MINBOOKAUTHORLENGTH) {
 			throw new BookException("Author cannot be null or have no characters.");
 		}
 		this.author = author;
@@ -57,7 +57,7 @@ public class Book implements LibraryItem {
 	}
 
 	public void setPages(int pages) throws BookException {
-		if(pages < BookConstants.MINPAGES) {
+		if(pages < LibraryItemConstants.MINBOOKPAGES) {
 			throw new BookException("Pages cannot be negative.");
 		}
 		this.pages = pages;
@@ -72,7 +72,7 @@ public class Book implements LibraryItem {
 	}
 
 	public void setTitle(String title) throws BookException {
-		if(title == null || title.length() < BookConstants.MINTITLELENGTH) {
+		if(title == null || title.length() < LibraryItemConstants.MINBOOKAUTHORLENGTH) {
 			throw new BookException("Title cannot be null or have no characters.");
 		}
 		this.title = title;
@@ -83,6 +83,14 @@ public class Book implements LibraryItem {
 		return "Book [title=" + title + ", author=" + author + ", pages=" + pages + ", status=" + status + "]";
 	}
 	
-	
+	@Override
+	public boolean equals(Object o) {
+			if(this == o) return true;
+			if(o == null || !(o instanceof Book)) return false;
+			// if it does not return yet
+			Book other = (Book) o;
+			return this.getAuthor().equals(other.getAuthor()) &&
+					this.getTitle().equals(other.getTitle());
+		}
 
 }
