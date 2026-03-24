@@ -147,7 +147,7 @@ public class HawkSh {
     /**
      * A Stack is a good choice because:
      * Commands Order: it displays the most recent command first.
-     * Dynamic: the main difference from an array as overlying data 
+     * Dynamic: the main difference from an array as underlying data 
      * structures is that the implemented singly linked list, lets 
      * the stack to grow as needed without any top limit. 
      */
@@ -167,7 +167,7 @@ public class HawkSh {
          * This method checks if the stacks is empty:
          * If it is, the method creates a new head, 
          * If it is not, the method creates a new Node which will point to the head,
-         * and becomes the head of the stack
+         * and becomes the new head of the stack
          */
         public void push(String command) {
         		if(isEmpty()) {
@@ -227,7 +227,7 @@ public class HawkSh {
      * The Queue successfully meets this search requirement.
      * Adding or removing directories, both in the middle or 
      * even at the end of the linked list, is not a problem for
-     * this data structure which does it with a O(1).
+     * this data structure which executes it with a O(1).
      */
     static class LinkedQueue {
 
@@ -335,9 +335,9 @@ public class HawkSh {
 
         /**
          * This method prints the History of the commandHistory Stack
-         * While the top of original Stack is not null, 
-         * The method will iterate through the CommandStack, 
-         * store the entire node in a new tmp Stack and print it out.
+         * while the top of original Stack is not null, 
+         * the method will iterate through the CommandStack, 
+         * store the entire node in a new tmpStack and print it out.
          * Additionally, the method will restore the original Stack, 
          * using the same process the other way around.
          */
