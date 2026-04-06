@@ -1,9 +1,5 @@
 package edu.monmouth.CS205L.boggle;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
-
 
 public class Boggle {
 
@@ -17,16 +13,41 @@ public class Boggle {
 		
 		// Create Dictionary thru Tree
 		Tree dictionaryTree = new Tree();
-		dictionaryTree.loadDictionary(BoggleConstants.INPUTFILE);
 		
-		ArrayList<String> foundWords = new ArrayList<String>();
-		recursiveSearch("", 0, 0, 0, boggleBoard, isExplored, dictionaryTree, foundWords );
-		
+		Set<String> foundWords = new HashSet<String>();
+		startSearch(n, boggleBoard, isExplored, dictionaryTree, foundWords);
+		countPoints(foundWords);
 		
 	
 	} // main
 	
-	public static void recursiveSearch(String currentWord,int row, int col, char[][] board, boolean[][] isExplored, Tree tree, ArrayList<String> foundWords) {
+	public static int countPoints(Set<String> words) {
+		if(words.size()==0) {return 0;}
+		int length, points, totalPoints=0;
+		for (String word: words) {
+			length = word.length();
+			if(length > 7) {points = 11;}
+			else if(length > 6) {points = 5;}
+			else if(length > 5) {points = 3;}
+			else if(length > 4) {points = 2;}
+			else if(length > 2) {points = 1;}
+			else {points = 0;}
+			totalPoints += points;
+			System.out.println("The word "+word+" is worth "+points+" points. Total points collected: "+ totalPoints);
+		}
+		System.out.println("Total words collcted: "+words.size()+"\nTotal points collected: "+totalPoints);
+		return totalPoints;
+	}
+	
+	public static void startSearch(int n, char[][] board, boolean[][] isExplored, Tree tree, Set<String> foundWords) {
+		for (int i = 0; i < n; i++) {
+		    for (int j = 0; j < n; j++) {
+				recursiveSearch("", i, j, board, isExplored, tree, foundWords );
+		    }
+		}
+	}
+	
+	public static void recursiveSearch(String currentWord,int row, int col, char[][] board, boolean[][] isExplored, Tree tree, Set<String> foundWords) {
 		
 		if(isOutOfBounds(board, row, col) || 
 				isVisited(isExplored, row, col)){
@@ -35,31 +56,26 @@ public class Boggle {
 		
 		String nextWord = currentWord + board[row][col];
 		isExplored[row][col] = true;
-		if (!(tree.isPrefixValid(nextWord))) {
-			return;
-		} else if(tree.isWord(nextWord)) {
-			foundWords.add(nextWord);
+		if (tree.isPrefixValid(nextWord)) {
+			if(nextWord.length() > BoggleConstants.MINWORDCHARACTERS && tree.isWord(nextWord)) {
+				foundWords.add(nextWord);
+			}
+		
+			// call recursion for next cells
+			int[] dRow = {-1, -1, -1,  0, 0,  1, 1, 1};
+			int[] dCol = {-1,  0,  1, -1, 1, -1, 0, 1};
+			
+			for(int i=0; i<dRow.length; i++) {
+				int nextRow = row + dRow[i];
+				int nextCol = col + dCol[i];
+				recursiveSearch(nextWord, nextRow, nextCol, board, isExplored, tree, foundWords);
+			}
 		}
-		
-		// call recursion for next cells
-		
 		// reset for other combinations
 		isExplored[row][col] = false;
 	} // recursiveSearch
 	
-	public static void populateHashMap(HashSet<String> dictionary) {
-		
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(BoggleConstants.INPUTFILE));
-			String line;
-			while((line = in.readLine()) != null) {
-				String word = line.trim().toLowerCase();
-				dictionary.add(word);
-			}
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-	}
+	
 	
 	public static int getNumberN(String[] args) {
 		int n;
@@ -103,14 +119,15 @@ public class Boggle {
 				} // if
 			} // inner for 
 		} // outer for
+		System.out.println();
 	} // printBoard
 	
 	public static boolean isOutOfBounds(char[][] board, int row, int col) {
 		if(row < 0 || row > (board.length-1)) {
-			System.out.println("Debugging: row out of bounds");
+			// System.out.println("Debugging: row out of bounds");
 			return true;
 		}  else if ( col < 0 || col > board.length-1) {
-			System.out.println("Debugging: col out of bounds");
+			// System.out.println("Debugging: col out of bounds");
 			return true;
 		}
 		return false;
@@ -123,12 +140,5 @@ public class Boggle {
 		return false;
 	} // isVisited
 	
-	public static boolean isPossibleWord(String word, HashSet<String> dict) {
-		// if is in list of possible words -> true
-		if(dict.contains(word)) {
-			return true;
-		}
-		return false;
-	}
 	
 }

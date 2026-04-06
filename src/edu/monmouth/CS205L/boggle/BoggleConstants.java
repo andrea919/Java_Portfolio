@@ -9,5 +9,6 @@ public class BoggleConstants {
 	protected static final char DEFAULTROOT='*';
 	protected static final int LISTINITIALIZER=10;
 	protected static final String INPUTFILE="twl.txt";
-
+	protected static final int MINWORDCHARACTERS=2;
+	
 }

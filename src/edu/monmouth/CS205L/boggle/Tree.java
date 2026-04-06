@@ -24,6 +24,8 @@ public class Tree {
 	
 	public Tree() {
 		root = new Node(BoggleConstants.DEFAULTROOT);
+		loadDictionary(BoggleConstants.INPUTFILE);
+
 	}
 	
 	public void insertWordTree(String word) {
