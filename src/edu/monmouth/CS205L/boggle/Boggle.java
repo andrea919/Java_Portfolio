@@ -35,7 +35,7 @@ public class Boggle {
 			totalPoints += points;
 			System.out.println("The word "+word+" is worth "+points+" points. Total points collected: "+ totalPoints);
 		}
-		System.out.println("Total words collcted: "+words.size()+"\nTotal points collected: "+totalPoints);
+		System.out.println("Total words collected: "+words.size()+"\nTotal points collected: "+totalPoints);
 		return totalPoints;
 	}
 	
