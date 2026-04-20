@@ -125,18 +125,6 @@ public class HW5 {
 				}
 			}
 		}
-		/*
-		for(Map.Entry<String, String[]> entry: map.entrySet()) {
-			String[] values = entry.getValue();
-			for(String s:values) {
-				if(isWordPalindrome(s)) {
-					System.out.println("Word " +s+" is palindrome.");
-				} else {
-					System.out.println("Word " +s+" is not palindrome.");
-				}
-			}
-		}
-		 */
 	} //accessSingleWords
 	
 	public static Boolean isWordPalindrome(String word) {
