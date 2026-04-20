@@ -23,6 +23,7 @@ public class HW5 {
 		public static final int EXIT_VALUE_CREATING_FILE=17;
 		public static final int EXIT_VALUE_FILE_NOT_FOUND=16;
 		public static final int EXIT_VALUE_READING_FILE=15;
+		public static final int EXIT_VALUE_INVALID_RANGE=14;
 		
 		public static final int EXPECTED_COMM_LINE=1;
 		public static final int START_INDEX=0;
@@ -35,10 +36,9 @@ public class HW5 {
 		initialization(args);
 		Properties p = new Properties();
 		String stdOut = retrieveOutput(args, p);
-		// redirect(stdOut);
+		redirect(stdOut);
 		Map<String, String[]> map = parseValues(p);
 		palindromeWords(map);
-		
 		palindromeNumbers(p);
 		
 	}
@@ -63,6 +63,7 @@ public class HW5 {
 				System.exit(HW5Constants.EXIT_VALUE_KEY_NOT_FOUND); 
 			}
 			return stdOut;
+		// If it catches an exception, I should still close p.close()
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found. Exiting...");
 			System.exit(HW5Constants.EXIT_VALUE_FILE_NOT_FOUND);
@@ -101,7 +102,7 @@ public class HW5 {
 		String temp;
 		String[] arr;
 		for (String s : keys) {
-			if (s.equals(HW5Constants.EXPECTED_FILE_NAME)) { 
+			if (s.equals(HW5Constants.EXPECTED_FILE_NAME) || s.equals(HW5Constants.EXPECTED_RANGE_KEY)) {
 				continue;
 			}
 			temp = p.getProperty(s);
@@ -110,18 +111,21 @@ public class HW5 {
 			map.put(s, arr);
 		}
 		return map;
-		/* DEBUGGING LinkedList
-		Iterator<String[]> it = list.iterator();
-		while(it.hasNext()) {
-			String[] strArray = it.next();
-			System.out.println("Words in array: ");
-			for(String s : strArray) {
-				System.out.println(s);
-			}
-		} */
 	} // parseValues
 	
 	public static void palindromeWords(Map<String, String[]> map){
+		Set<String> keys = map.keySet();
+		for(String keyS: keys) {
+			String[] values = map.get(keyS);
+			for(String valueS: values ) {
+				if(isWordPalindrome(valueS)) {
+					System.out.println("Word " +valueS+" is palindrome.");
+				} else {
+					System.out.println("Word " +valueS+" is not palindrome.");
+				}
+			}
+		}
+		/*
 		for(Map.Entry<String, String[]> entry: map.entrySet()) {
 			String[] values = entry.getValue();
 			for(String s:values) {
@@ -132,7 +136,7 @@ public class HW5 {
 				}
 			}
 		}
-		
+		 */
 	} //accessSingleWords
 	
 	public static Boolean isWordPalindrome(String word) {
@@ -165,6 +169,9 @@ public class HW5 {
 		        int start = Integer.parseInt(parts[0].trim());
 		        int end = Integer.parseInt(parts[1].trim());
 		        printPalindromeNumbers(start, end);
+		    } else {
+		    		System.out.println("Invalid range format.");
+		    		System.exit(HW5Constants.EXIT_VALUE_INVALID_RANGE); 
 		    }
 		}
 		
@@ -172,6 +179,7 @@ public class HW5 {
 	
 	public static void printPalindromeNumbers(int num, int end) {
 		String numString;
+		System.out.println("Printing palindrome Numbers... ");
 		while(num <= end) {
 			numString = String.valueOf(num);
 			if(isWordPalindrome(numString)) {
