@@ -18,19 +18,25 @@ public class HW6 {
 		
 		Properties p = new Properties();
 		String redirectFileName = extractRedirectFile(p, propFile);
-		// redirectFile(redirectFileName);
+		redirectFile(redirectFileName);
 		
 		String libraryItemFileName = parseStringInProperty(p, HW6Constants.LIBRARY_ITEM_FILE_NAME);
-		// char delimiter = parseCharInProperty(p, HW6Constants.DELIMITER_NAME);
 		String delimiter = parseStringInProperty(p, HW6Constants.DELIMITER_NAME);
 		
 		Set<Book> bookTreeSet = new TreeSet<>();
 		Set<Journal> journalTreeSet = new TreeSet<>();
-		populateTreeSet(bookTreeSet, journalTreeSet, libraryItemFileName, delimiter);
-		System.out.println("Book count: " + bookTreeSet.size());
-	
-		printTreeSet(bookTreeSet);
 		
+		populateTreeSet(bookTreeSet, journalTreeSet, libraryItemFileName, delimiter);
+	
+		printTreeSet(bookTreeSet, "Book and Comparable");
+		printTreeSet(journalTreeSet, "Journal and Comparable");
+		
+		Set<Book> treeTitle = new TreeSet<>(new BookTitle());
+		Set<Journal> treeEditor = new TreeSet<>(new JournalEditor());
+		populateTreeSet(treeTitle, treeEditor, libraryItemFileName, delimiter);
+		
+		printTreeSet(treeTitle, "Book and Comparator");
+		printTreeSet(treeEditor, "Journal and Comparator");
 	}
 
 	
@@ -88,22 +94,11 @@ public class HW6 {
 		
 	} // parseStringInProperty
 	
-	private static char parseCharInProperty(Properties p, String keyName) {
-	    isKeyInPropertiesFile(p, keyName);
-	    String value = p.getProperty(keyName);
-	    if (value.isEmpty()) {
-	        System.err.println("Property " + keyName + " is empty. Exiting...");
-	        System.exit(HW6Constants.EXIT_VALUE_PROPERTY_NOT_FOUND);
-	    }
-	    return value.charAt(0);
-	} // parseCharInProperty
-	
 	private static void populateTreeSet(Set<Book> bookTreeSet, Set<Journal> journalTreeSet, String fileName, String delimiter) {
 		try(BufferedReader in = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			while((line = in.readLine())!= null) {
 				String[] parts = line.strip().split(delimiter);
-			    // System.out.println("Parts length: " + parts.length + " | Parts: " + java.util.Arrays.toString(parts));  // debug
 				if(validateParts(parts)) {
 					// initialize only if the letter is correct
 					if((parts[0].equals(HW6Constants.EXPECTED_BOOK_INITIAL)) || 
@@ -147,8 +142,8 @@ public class HW6 {
 		return false;
 	} // validateParts
 	
-	private static void printTreeSet(Set<Book> bookTreeSet) {
-		
+	private static void printTreeSet(Set<? extends LibraryItem> bookTreeSet, String label) {
+		System.out.println("\n--- "+label.toUpperCase()+" ---");
 		for(LibraryItem item: bookTreeSet) {
 			System.out.println(item.toString());
 		}
