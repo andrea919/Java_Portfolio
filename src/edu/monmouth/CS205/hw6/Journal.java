@@ -26,7 +26,7 @@ public class Journal implements LibraryItem, Comparable<Journal>{
 	@Override
 	public void borrowItem() {
 		if(!(getStatus().equals(StatusType.ONSHELF))) {
-			System.out.println("This book is not available.");
+			System.out.println("This journal is not available.");
 			return;
 		}
 		setStatus(StatusType.BORROWED);
@@ -92,6 +92,11 @@ public class Journal implements LibraryItem, Comparable<Journal>{
 			return this.getTitle().equals(other.getTitle()) &&
 					this.getEditor().equals(other.getEditor()) &&
 					this.getVolume() == other.getVolume();
+	}
+	
+	@Override
+	public int hashCode() {
+	    return title.hashCode() + editor.hashCode() + volume;
 	}
 
 	@Override

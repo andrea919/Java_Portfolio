@@ -72,7 +72,7 @@ public class Book implements LibraryItem, Comparable<Book> {
 	}
 
 	public void setTitle(String title) throws BookException {
-		if(title == null || title.length() < LibraryItemConstants.MINBOOKAUTHORLENGTH) {
+		if(title == null || title.length() < LibraryItemConstants.MINBOOKTITLELENGTH) {
 			throw new BookException("Title cannot be null or have no characters.");
 		}
 		this.title = title;
@@ -92,6 +92,11 @@ public class Book implements LibraryItem, Comparable<Book> {
 			return this.getAuthor().equals(other.getAuthor()) &&
 					this.getTitle().equals(other.getTitle());
 		}
+	
+	@Override
+	public int hashCode() {
+	    return author.hashCode() + title.hashCode();
+	}
 
 	@Override
 	public int compareTo(Book o) {
