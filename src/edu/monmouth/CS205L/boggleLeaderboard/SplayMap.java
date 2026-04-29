@@ -1,6 +1,6 @@
 package edu.monmouth.CS205L.boggleLeaderboard;
 
-import java.util.ArrayList;
+import java.util.ArrayList;	
 import java.util.List;
 
 /**
@@ -133,9 +133,35 @@ public class SplayMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //  (or one, in the zig case). Loop until x reaches the root.
 
     private void splay(Node x) {
-        // TODO — implement the splay loop here
-        throw new UnsupportedOperationException("splay() not yet implemented");
-    }
+    		while(x.parent != null) {
+    			Node p = x.parent;
+        		Node g = p.parent;
+        		// Case 1: Zig
+            if (g == null) {
+            		if (x == p.left) {
+            			rotateRight(p);
+                    	} else {
+                    		rotateLeft(p);
+                    }
+            	}
+             // Case 2: Zig-Zig
+            	else if (x == p.left && p == g.left) {
+            		rotateRight(g);
+            		rotateRight(p);
+            	} else if (x == p.right && p == g.right) {
+            		rotateLeft(g);
+                rotateLeft(p);
+            }
+            	// Case 3: Zig-Zag
+            else if (x == p.right && p == g.left) {
+            		rotateLeft(p);
+                rotateRight(g);
+            } else if (x == p.left && p == g.right) {
+                rotateRight(p);
+                rotateLeft(g);
+            }      	
+    		} // while
+    } // splay
 
     // ── Part 2B: find() helper ────────────────────────────────────────────────
     //
@@ -147,8 +173,26 @@ public class SplayMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //  visited node is close to where key would be inserted.
 
     private Node findAndSplay(K key) {
-        // TODO
-        throw new UnsupportedOperationException("findAndSplay() not yet implemented");
+    		if(root == null) return null;
+    		
+        Node current = root;
+        Node last = null;
+        
+        while(current!=null) {
+        		last = current;
+        		
+        		int cmp = compare(key, current.key);
+        		
+        		if(cmp == 0) {
+        			splay(current);
+        			return current;
+        		} 
+        		else if(cmp < 0) current = current.left;
+        		else current = current.right;
+        }
+        splay(last);
+        return last;
+        
     }
 
     // ── Part 2C: put ─────────────────────────────────────────────────────────
@@ -173,10 +217,47 @@ public class SplayMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
 
     @Override
     public void put(K key, V value) {
-        // TODO
-        throw new UnsupportedOperationException("put() not yet implemented");
-    }
+        if(root == null) {
+        		root = new Node(key, value);
+        		size++;
+        		return;
+        }
+        findAndSplay(key);
+        
+        int cmp = compare(key, root.key);
+        if(cmp == 0) {
+        		root.value = value;
+        		return;
+        }
+        
+        Node n = new Node(key,value);
+        if (cmp < 0) {
+            n.right = root;
+            n.left = root.left;
 
+            if (n.left != null) {
+                n.left.parent = n;
+            }
+
+            root.left = null;
+            root.parent = n;
+        } else {
+            n.left = root;
+            n.right = root.right;
+
+            if (n.right != null) {
+                n.right.parent = n;
+            }
+
+            root.right = null;
+            root.parent = n;
+        }
+
+        root = n;
+        size++;
+    }
+        
+        
     // ── Part 2D: get ─────────────────────────────────────────────────────────
     //
     //  Algorithm:
@@ -187,8 +268,10 @@ public class SplayMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
 
     @Override
     public V get(K key) {
-        // TODO
-        throw new UnsupportedOperationException("get() not yet implemented");
+        if(isEmpty()) return null;
+        findAndSplay(key);
+        if(compare(root.key, key) == 0) return root.value;
+        return null;
     }
 
     @Override
@@ -209,30 +292,79 @@ public class SplayMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
 
     @Override
     public void remove(K key) {
-        // TODO
-        throw new UnsupportedOperationException("remove() not yet implemented");
+        if(isEmpty()) return;
+    		findAndSplay(key);
+        if(compare(key, root.key) != 0) return;
+        
+        Node L = root.left;
+        Node R = root.right;
+        if (L != null) L.parent = null;
+        if (R != null) R.parent = null;
+        
+        if(L == null) root = R;
+        else {
+        		root = L;
+            Node max = maxNode(root);
+            splay(max);
+            
+            root.right = R;
+            if(R != null) R.parent = root; 
+        }
+        size--;
+    }
+    
+    private Node minNode(Node node) {
+        if (node == null) return null;
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+    
+    private Node maxNode(Node node) {
+        if (node == null) return null;
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
     }
 
     // ── Part 2F: min / max ───────────────────────────────────────────────────
 
     @Override
     public K minKey() {
-        // TODO
-        throw new UnsupportedOperationException("minKey() not yet implemented");
+        if(isEmpty()) return null;
+        return minNode(root).key;
     }
 
     @Override
     public K maxKey() {
-        // TODO
-        throw new UnsupportedOperationException("maxKey() not yet implemented");
+        if (isEmpty()) return null;
+        return maxNode(root).key;
     }
 
     // ── Part 2G: rangeSearch ─────────────────────────────────────────────────
     //  Adapt your solution from BSTMap — the structure is identical.
 
     private void rangeSearch(Node node, K lo, K hi, List<K> result) {
-        // TODO
+		if(node == null ) return;
+		
+		int cmpLo = compare(node.key, lo);
+	    int cmpHi = compare(node.key, hi);
+	    
+	    if (cmpLo > 0) {
+	        rangeSearch(node.left, lo, hi, result);
+	    }
+
+	    if (cmpLo >= 0 && cmpHi <= 0) {
+	        result.add(node.key);
+	    }
+
+	    if (cmpHi < 0) {
+	        rangeSearch(node.right, lo, hi, result);
+	    }
     }
+
 
     @Override
     public List<K> rangeSearch(K lo, K hi) {

@@ -55,21 +55,34 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
         // TODO
     		if(isEmpty()) {
     			root = new Node(key, value);
+    			size++;
+    			return;
     		} 
-    		Node node = new Node(key, value);
-    		Node nextNode = root;
+    		Node current = root;
     		
-    		while(!(nextNode.right.equals(null) && nextNode.left.equals(null))) {
-    			if(nextNode.key.compareTo(node.key) > 0) {nextNode = nextNode.right;}
-    			else if(nextNode.key.compareTo(node.key) == 0) { nextNode.value = node.value;}
-    			else {nextNode = nextNode.left;}
+    		while(true) {
+    			int cmp = compare(key, current.key);
+    			
+    			if(cmp == 0) {
+    				current.value = value;
+    				return;
+    			}else if (cmp < 0) {
+    				if(current.left == null) {
+    					current.left = new Node(key, value);
+    					size++;
+    					return;
+    				}
+    				current = current.left;
+    			} else {
+    				if(current.right == null) {
+    					current.right = new Node(key, value);
+    					size++;
+    					return;
+    				}
+    				current = current.right;
+    			}
     		}
-    		
-    		// when right and left are null means that it is a leaf
-    		if(node.key.compareTo(nextNode.key) > 0) { nextNode.right = node;}
-    		else {nextNode.left = node; }
     
-        throw new UnsupportedOperationException("put() not yet implemented");
     }
     
 
@@ -80,8 +93,16 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
      */
     @Override
     public V get(K key) {
-        // TODO
-        throw new UnsupportedOperationException("get() not yet implemented");
+        if(isEmpty()) return null;
+        Node current = root;
+        while(current != null) {
+        		int cmp = compare(key, current.key);
+        		if(cmp == 0) return current.value;
+        		else if(cmp > 0) current = current.right;
+        		else current = current.left;
+        }
+		return null;
+        
     }
 
     @Override
@@ -108,9 +129,51 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
      */
     @Override
     public void remove(K key) {
-        // TODO
-        throw new UnsupportedOperationException("remove() not yet implemented");
+    		if (!containsKey(key)) return;
+        root = remove(root, key);
     }
+    
+    private Node remove(Node node, K key) {
+        if (node == null) return null;
+
+        int cmp = compare(key, node.key);
+        if(cmp < 0) node.left = remove(node.left, key);
+        else if(cmp > 0) node.right = remove(node.right, key);
+        else {
+        		// found the node to remove
+	        	if (node.left == null) {
+	        	    size--;
+	        	    return node.right;
+	        	}
+	        	if (node.right == null) {
+	        	    size--;
+	        	    return node.left;
+	        	}
+	        	Node successor = minNode(node.right);
+	        	node.key = successor.key;
+	        	node.value = successor.value;
+	        
+        		node.right = remove(node.right, successor.key);
+        }
+        return node;
+    }
+    
+    private Node minNode(Node node) {
+        if (node == null) return null;
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+    
+    private Node maxNode(Node node) {
+        if (node == null) return null;
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+    
 
     // ── Part 1D: min / max ───────────────────────────────────────────────────
 
@@ -119,8 +182,8 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
      */
     @Override
     public K minKey() {
-        // TODO
-        throw new UnsupportedOperationException("minKey() not yet implemented");
+        if (isEmpty()) return null;
+        return minNode(root).key;
     }
 
     /**
@@ -128,8 +191,8 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
      */
     @Override
     public K maxKey() {
-        // TODO
-        throw new UnsupportedOperationException("maxKey() not yet implemented");
+        if (isEmpty()) return null;
+        return maxNode(root).key;
     }
 
     // ── Part 1E: rangeSearch ─────────────────────────────────────────────────
@@ -150,7 +213,22 @@ public class BSTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
      * @param result the list to append matching keys to (in order)
      */
     private void rangeSearch(Node node, K lo, K hi, List<K> result) {
-        // TODO
+    		if(node == null ) return;
+    		
+    		int cmpLo = compare(node.key, lo);
+    	    int cmpHi = compare(node.key, hi);
+    	    
+    	    if (cmpLo > 0) {
+    	        rangeSearch(node.left, lo, hi, result);
+    	    }
+
+    	    if (cmpLo >= 0 && cmpHi <= 0) {
+    	        result.add(node.key);
+    	    }
+
+    	    if (cmpHi < 0) {
+    	        rangeSearch(node.right, lo, hi, result);
+    	    }
     }
 
     @Override

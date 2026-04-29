@@ -76,8 +76,8 @@ public class RBTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //
     //  Before:           After:
     //    h                 x
-    //   / \RED            RED/ \
-    //  A   x            h     C
+    //   / \RED         RED/ \
+    //  A   x            h    C
     //     / \          / \
     //    B   C        A   B
     //
@@ -90,8 +90,15 @@ public class RBTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //    6. Return x            (new subtree root)
 
     private Node rotateLeft(Node h) {
-        // TODO — Part 3A
-        throw new UnsupportedOperationException("rotateLeft() not yet implemented");
+        Node x = h.right;
+        
+        h.right = x.left;
+        x.left = h;
+        
+        x.color = h.color;
+        h.color = RED;
+        
+        return x;
     }
 
     // ── Part 3B: rotateRight ─────────────────────────────────────────────────
@@ -109,8 +116,16 @@ public class RBTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //  Steps are the mirror of rotateLeft. Work them out yourself!
 
     private Node rotateRight(Node h) {
-        // TODO — Part 3B
-        throw new UnsupportedOperationException("rotateRight() not yet implemented");
+        Node x = h.left;
+        
+        h.left = x.right;
+        x.right = h;
+        
+        x.color = h.color;
+        h.color = RED;
+        
+        return x;
+        
     }
 
     // ── Part 3C: flipColors ──────────────────────────────────────────────────
@@ -124,8 +139,15 @@ public class RBTMap<K extends Comparable<K>, V> implements SortedMap<K, V> {
     //  No structural changes (no pointer changes) — just flip the colors.
 
     private void flipColors(Node h) {
-        // TODO — Part 3C
-        throw new UnsupportedOperationException("flipColors() not yet implemented");
+    		h.color = !h.color;
+
+        if (h.left != null) {
+            h.left.color = !h.left.color;
+        }
+
+        if (h.right != null) {
+            h.right.color = !h.right.color;
+        }
     }
 
     // ── PROVIDED: put (complete — do not modify) ─────────────────────────────
