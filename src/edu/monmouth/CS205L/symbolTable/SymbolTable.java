@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/* An HashMap was chosen as the underlying data structures
+/* A HashMap was chosen as the underlying data structures
  * because it guarantees O(1) average time complexity for 
  * the main operations that a Symbol Table needs to execute
  * often such as insertion, get and deletion.
@@ -14,7 +14,7 @@ import java.util.Set;
  * compact and consistent. I could have used built-in structures
  * like an internal HashTable or Properties class but having a 
  * custom class gives full control of the code, making the 
- * structure smoother and easier to extend in the future.
+ * structure smoother and easier to extend if needed.
 */
 public class SymbolTable {
 	public static class Symbol{
